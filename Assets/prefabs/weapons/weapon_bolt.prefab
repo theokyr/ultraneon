@@ -21,9 +21,32 @@
         "isReloading": false,
         "isSemiAuto": true,
         "reloadTime": 6,
-        "shootSound": "sounds/placeholders/pistol_shoot.sound",
+        "shootSound": "sounds/weapons/bolt_shoot_1.sound",
+        "Viewmodel": {
+          "_type": "component",
+          "component_id": "0569bd32-86ee-4d14-b3cc-712ee6555520",
+          "go": "a3add265-5ca9-4525-955b-45830c25617e",
+          "component_type": "SkinnedModelRenderer"
+        },
         "weaponDamage": 100,
-        "weaponType": "bolt"
+        "weaponType": "bolt",
+        "Worldmodel": {
+          "_type": "component",
+          "component_id": "50a89187-4228-46a9-a8d6-957daa37e573",
+          "go": "a3add265-5ca9-4525-955b-45830c25617e",
+          "component_type": "SkinnedModelRenderer"
+        }
+      },
+      {
+        "__type": "Sandbox.SkinnedModelRenderer",
+        "__guid": "0569bd32-86ee-4d14-b3cc-712ee6555520",
+        "__enabled": false,
+        "BodyGroups": 42259,
+        "CreateBoneObjects": false,
+        "Model": "models/weapons/sbox_assault_m4a1/v_m4a1.vmdl",
+        "RenderType": "On",
+        "Tint": "1,1,1,1",
+        "UseAnimGraph": true
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
@@ -52,6 +75,7 @@
   "MenuIcon": null,
   "ResourceVersion": 1,
   "__references": [
+    "facepunch.v_m4a1",
     "facepunch.w_trenchknife"
   ],
   "__version": 1

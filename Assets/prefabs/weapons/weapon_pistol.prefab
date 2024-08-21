@@ -3,6 +3,7 @@
     "__guid": "cd2d7e06-735b-4d77-ae08-f48f8e06e45a",
     "Flags": 0,
     "Name": "weapon_pistol",
+    "Position": "0,0,64",
     "Tags": "trigger",
     "Enabled": true,
     "Components": [
@@ -21,16 +22,39 @@
         "isReloading": false,
         "isSemiAuto": true,
         "reloadTime": 2,
-        "shootSound": "sounds/placeholders/pistol_shoot.sound",
+        "shootSound": "sounds/weapons/pistol_laser_shoot_1.sound",
+        "Viewmodel": {
+          "_type": "component",
+          "component_id": "b4a4919a-28f1-425e-9644-26a585f5c74d",
+          "go": "cd2d7e06-735b-4d77-ae08-f48f8e06e45a",
+          "component_type": "SkinnedModelRenderer"
+        },
         "weaponDamage": 35,
-        "weaponType": "pistol"
+        "weaponType": "pistol",
+        "Worldmodel": {
+          "_type": "component",
+          "component_id": "6eb81083-303f-425f-9279-68e5523e2cee",
+          "go": "cd2d7e06-735b-4d77-ae08-f48f8e06e45a",
+          "component_type": "SkinnedModelRenderer"
+        }
+      },
+      {
+        "__type": "Sandbox.SkinnedModelRenderer",
+        "__guid": "b4a4919a-28f1-425e-9644-26a585f5c74d",
+        "__enabled": false,
+        "BodyGroups": 17685,
+        "CreateBoneObjects": false,
+        "Model": "models/weapons/sbox_pistol_usp/v_usp.vmdl",
+        "RenderType": "On",
+        "Tint": "1,1,1,1",
+        "UseAnimGraph": true
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",
         "__guid": "6eb81083-303f-425f-9279-68e5523e2cee",
-        "BodyGroups": 17685,
+        "BodyGroups": 171,
         "CreateBoneObjects": false,
-        "Model": "models/weapons/sbox_pistol_usp/v_usp.vmdl",
+        "Model": "models/weapons/sbox_assault_m4a1/w_m4a1.vmdl",
         "RenderType": "On",
         "Tint": "1,1,1,1",
         "UseAnimGraph": true
@@ -52,7 +76,8 @@
   "MenuIcon": null,
   "ResourceVersion": 1,
   "__references": [
-    "facepunch.v_usp"
+    "facepunch.v_usp",
+    "facepunch.w_m4a1"
   ],
   "__version": 1
 }

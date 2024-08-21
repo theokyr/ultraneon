@@ -1,0 +1,17 @@
+{
+  "UI": true,
+  "Volume": "1",
+  "Pitch": "0.9 1.2",
+  "Decibels": 120,
+  "SelectionMode": "Random",
+  "Sounds": [
+    "sounds/weapons/pistol_laser_shoot_1.vsnd"
+  ],
+  "Occlusion": true,
+  "AirAbsorption": true,
+  "Transmission": true,
+  "OcclusionRadius": 64,
+  "DistanceAttenuation": true,
+  "__references": [],
+  "__version": 0
+}

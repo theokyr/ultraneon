@@ -109,7 +109,27 @@
         }
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "49626860-c740-4e6e-a184-5011ffc025e3",
+        "Flags": 0,
+        "Name": "v_arms",
+        "Enabled": true,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "c8ce7d3e-7372-4d78-b56d-621bfb7715ae",
+            "__enabled": false,
+            "BodyGroups": 18446744073709551615,
+            "CreateBoneObjects": false,
+            "Model": "models/first_person/first_person_arms_citizen_4fingers.vmdl",
+            "RenderType": "On",
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
+        ]
+      }
+    ],
     "__variables": []
   },
   "ShowInMenu": false,

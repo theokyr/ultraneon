@@ -1,11 +1,11 @@
 {
-  "UI": true,
-  "Volume": "0.20,1.00,0",
-  "Pitch": "1.00,1.00,0",
-  "Decibels": 120,
+  "UI": false,
+  "Volume": "1",
+  "Pitch": "1",
+  "Decibels": 70,
   "SelectionMode": "Random",
   "Sounds": [
-    "sounds/placeholders/p_shoot.vsnd"
+    "sounds/weapons/bolt_shoot_1.vsnd"
   ],
   "Occlusion": true,
   "AirAbsorption": true,
