@@ -1,0 +1,33 @@
+﻿@using Sandbox
+@using Sandbox.UI
+@inherits Panel
+@namespace Ultraneon.UI
+@attribute [StyleSheet]
+
+<root>
+	<div class="vitals">
+		<div class="icon">add_box</div>
+		<div class="fill" style="width: @( Player?.health )%"></div>
+	</div>
+</root>
+
+@code
+{
+	[Property]
+	public Entity Player { get; set; }
+
+	protected override void OnAfterTreeRender( bool firstTime )
+	{
+		base.OnAfterTreeRender( firstTime );
+
+		if ( firstTime )
+		{
+			Player = Scene.GetAllComponents<Entity>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
+		}
+	}
+
+	protected override int BuildHash()
+	{
+		return System.HashCode.Combine( Player?.health );
+	}
+}

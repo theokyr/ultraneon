@@ -1,0 +1,82 @@
+﻿@using System
+@using Sandbox.UI
+@inherits Panel
+@namespace Ultraneon.UI
+
+<root class="hotbar">
+	@for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
+	{
+		int slotIndex = i;
+		<div class="items @( Inventory?.SelectedSlot == slotIndex ? "selected" : "" )">
+			<div class="item-number">@( slotIndex + 1 )</div>
+			@if ( Inventory?.weapons != null && Inventory.weapons.Length > slotIndex && Inventory.weapons[slotIndex] != null )
+			{
+				<div class="item-name">@Inventory.weapons[slotIndex].GameObject.Name</div>
+			}
+			else
+			{
+				<div class="item-name">Empty</div>
+			}
+		</div>
+	}
+</root>
+
+@code
+{
+	const int MAX_INVENTORY_SLOTS = 4;
+
+	[Property]
+	public PlayerInventory Inventory { get; set; }
+
+	private WeaponBaseNeon[] lastWeapons = new WeaponBaseNeon[MAX_INVENTORY_SLOTS];
+
+	protected override void OnAfterTreeRender( bool firstTime )
+	{
+		base.OnAfterTreeRender( firstTime );
+
+		if ( firstTime )
+		{
+			var player = Scene.Components.GetAll<Entity>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
+			Inventory = player?.GameObject.Components.Get<PlayerInventory>();
+		}
+	}
+
+	public override void Tick()
+	{
+		base.Tick();
+
+		if ( Inventory != null && HasInventoryChanged() )
+		{
+			StateHasChanged();
+			UpdateLastWeapons();
+		}
+	}
+
+	private bool HasInventoryChanged()
+	{
+		if ( Inventory == null || Inventory.weapons == null ) return false;
+
+		for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
+		{
+			if ( Inventory.weapons[i] != lastWeapons[i] )
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void UpdateLastWeapons()
+	{
+		for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
+		{
+			lastWeapons[i] = Inventory.weapons[i];
+		}
+	}
+
+	protected override int BuildHash()
+	{
+		return System.HashCode.Combine( Inventory?.SelectedSlot, string.Join( ",", Inventory?.weapons?.Select( w => w?.GameObject.Name ?? "Empty" ) ?? Array.Empty<string>() ) );
+	}
+}

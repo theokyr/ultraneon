@@ -1,0 +1,54 @@
+﻿@using System
+@using Sandbox.UI
+@inherits Panel
+@namespace Ultraneon.UI
+@attribute [StyleSheet]
+
+<root>
+	<div class="radar-background">
+		@foreach ( var point in CapturePoints )
+		{
+			<div class="radar-blip @point.ControllingTeam" style="left: @( point.RadarX )%; top: @( point.RadarY )%;">
+				<div class="health-indicator" style="width: @( point.Health / point.MaxHealth * 100 )%"></div>
+			</div>
+		}
+	</div>
+</root>
+
+@code
+{
+	private Entity playerEntity;
+	public List<CaptureZoneEntity> CapturePoints { get; set; } = new();
+
+	protected override void OnAfterTreeRender( bool firstTime )
+	{
+		base.OnAfterTreeRender( firstTime );
+
+		if ( firstTime )
+		{
+			playerEntity = Scene.Components.GetAll<Entity>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
+			CapturePoints = Scene.Components.GetAll<CaptureZoneEntity>().ToList();
+		}
+	}
+
+	public override void Tick()
+	{
+		if ( playerEntity == null ) return;
+
+		foreach ( var point in CapturePoints )
+		{
+			var relativePos = point.Transform.Position - playerEntity.Transform.Position;
+			var distance = relativePos.Length;
+			var maxRadarDistance = 1000f;
+
+			var angle = MathF.Atan2( relativePos.y, relativePos.x );
+			point.RadarX = 50f + (distance / maxRadarDistance) * 50f * MathF.Cos( angle );
+			point.RadarY = 50f + (distance / maxRadarDistance) * 50f * MathF.Sin( angle );
+		}
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine( CapturePoints.Select( p => HashCode.Combine( p.RadarX, p.RadarY, p.ControllingTeam, p.Health ) ) );
+	}
+}

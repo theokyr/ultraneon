@@ -1,74 +1,36 @@
-@using Sandbox;
-@using Sandbox.UI;
+@using System
+@using Sandbox
+@using Sandbox.UI
 @inherits PanelComponent
+@attribute [StyleSheet]
+@namespace Ultraneon.UI
 
 <root>
-    <div class="vitals">
-        <div class="health">
-            <div class="icon">add_box</div>
-            <div class="value">
-                <p>@player?.health</p>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="hotbar">
-
-        <div class="items" @ref="itemPanels[0]">1</div>
-        <div class="items" @ref="itemPanels[1]">2</div>
-        <div class="items" @ref="itemPanels[2]">3</div>
-        <div class="items" @ref="itemPanels[3]">4</div>
-    </div>
-
-    <div class="crosshair">
-        X
-    </div>
+	<VitalsPanel Player="@player"/>
+	<InventoryPanel Inventory="@inventory"/>
+	<CrosshairPanel/>
+	<AmmoPanel/>
+	<RadarPanel/>
 </root>
 
 @code
 {
+	[Property]
+	Entity player { get; set; }
 
-    [Property] Entity player { get; set; }
-    [Property] PlayerInventory inventory { get; set; }
+	[Property]
+	PlayerInventory inventory { get; set; }
 
-    Panel[] itemPanels = new Panel[4];
+	protected override void OnEnabled()
+	{
+		base.OnEnabled();
+		player = Scene.GetAllComponents<Entity>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
+		inventory = player?.GameObject.Components.Get<PlayerInventory>();
+		Log.Info( $"PlayerUI OnEnabled: player = {player}, inventory = {inventory}" );
+	}
 
-    protected override void OnEnabled()
-    {
-        base.OnEnabled();
-        player = Scene.GetAllComponents<Entity>().FirstOrDefault(x => x.GameObject.Tags.Has("player"));
-        inventory = player.GameObject.Components.Get<PlayerInventory>();
-    }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        setActiveStyle(0);
-        setActiveStyle(1);
-        setActiveStyle(2);
-        setActiveStyle(3);
-    }
-
-    void setActiveStyle(int i)
-    {
-        if (inventory?.weapons[i] is not null)
-        {
-
-            itemPanels[i].Style.BackgroundColor = new Color(0.7f, 0.75f, 0.7f, 0.7f);
-
-        }
-        if (inventory?.SelectedSlot is not null && inventory?.weapons.Count(x => x != null) > 0)
-        {
-
-            itemPanels[inventory.SelectedSlot].Style.BackgroundColor = new Color(0.3f, 0.8f, 0.3f, 0.6f);
-        }
-
-    }
-
-    protected override int BuildHash()
-    {
-        return player.IsValid()? System.HashCode.Combine(player.health) : 0;
-    }
+	protected override int BuildHash()
+	{
+		return player.IsValid() ? System.HashCode.Combine( player.health, inventory?.SelectedSlot ) : 0;
+	}
 }

@@ -1,67 +1,67 @@
 
 PlayerUI {
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	top: 0px;
-	pointer-events: none;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  pointer-events: none;
 
-	.vitals {
-		position: absolute;
-		left: 100px;
-		bottom: 100px;
-		gap: 10px;
-	}
+  .vitals {
+    position: absolute;
+    left: 100px;
+    bottom: 100px;
+    gap: 10px;
+  }
 
-	.crosshair {
-		right: 50%;
-		top: 50%;
-		position: absolute;
-	}
+  .crosshair {
+    right: 50%;
+    top: 50%;
+    position: absolute;
+  }
 
-	.hotbar {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		position: absolute;
-		right: 20px;
-		bottom: 20px;
-		gap: 8px;
-		font-family: Material Icons;
-	}
+  .hotbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    gap: 8px;
+    font-family: Material Icons;
+  }
 
-	.items {
-		background-color: #0004;
-		opacity: 1;
-		border-radius: 3px;
-		padding: 30px 120px;
-		color: dimgrey;
-		font-weight: 400;
-		font-size: 35px;
-		font-family: Cascadia Code;
-		justify-content: center;
-		align-items: center;
-		gap: 16px;
-	}
+  .items {
+    background-color: #0004;
+    opacity: 1;
+    border-radius: 3px;
+    padding: 30px 120px;
+    color: dimgrey;
+    font-weight: 400;
+    font-size: 35px;
+    font-family: Cascadia Code;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+  }
 
-	.health {
-		background-color: #0004;
-		opacity: 0.7;
-		border-radius: 3px;
-		padding: 10px 20px;
-		color: palegreen;
-		font-weight: 400;
-		font-size: 50px;
-		font-family: Cascadia Code;
-		justify-content: center;
-		align-items: center;
-		gap: 16px;
-		backdrop-filter: blur( 2px );
+  .vitals {
+    background-color: #0004;
+    opacity: 0.7;
+    border-radius: 3px;
+    padding: 10px 20px;
+    color: palegreen;
+    font-weight: 400;
+    font-size: 50px;
+    font-family: Cascadia Code;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    backdrop-filter: blur(2px);
 
-		.icon {
-			font-family: Material Icons;
-		}
-	}
+    .icon {
+      font-family: Material Icons;
+    }
+  }
 }
