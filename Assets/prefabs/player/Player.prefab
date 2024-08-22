@@ -8,11 +8,14 @@
     "NetworkMode": 1,
     "Components": [
       {
-        "__type": "Entity",
-        "__guid": "751a8182-31bd-4112-baea-c0227c4bbc0c",
+        "__type": "Ultraneon.PlayerNeon",
+        "__guid": "98a827c8-40ab-4441-8a5d-5f78d88e626f",
+        "CaptureTime": 15,
+        "HealInterval": 5,
         "health": 0,
         "isAlive": true,
-        "maxHealth": 100
+        "MaxHealth": 100,
+        "RespawnDelay": 5
       },
       {
         "__type": "PlayerInventory",

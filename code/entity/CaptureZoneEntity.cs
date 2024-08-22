@@ -1,58 +1,55 @@
-﻿using System;
+﻿using Sandbox;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Ultraneon;
 
 [Category( "Ultraneon" )]
 [Icon( "place" )]
-public sealed class CaptureZoneEntity : Component, Component.IDamageable, Component.INetworkListener
+public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 {
 	[Property]
 	public string PointName { get; set; } = "Capture Zone";
 
 	[Property]
-	public float CaptureRadius { get; set; } = 5f;
-
-	[Property]
-	public float CaptureTime { get; set; } = 10f;
+	public float CaptureTime { get; set; } = 15f;
 
 	[Property, HostSync]
-	public string ControllingTeam { get; set; } = "Neutral";
+	public Team ControllingTeam { get; set; } = Team.Neutral;
 
 	[Property, HostSync]
 	public float CaptureProgress { get; set; } = 0f;
-
-	[Property, ReadOnly]
-	public float MaxHealth { get; set; } = 100f;
-
-	[Property, HostSync, Change( nameof(OnHealthChanged) )]
-	public float Health { get; set; }
 
 	public float RadarX { get; set; }
 	public float RadarY { get; set; }
 
 	private TimeSince timeSinceLastCapture;
+	private HashSet<Entity> playersInZone = new();
 
 	protected override void OnStart()
 	{
 		base.OnStart();
-		Health = MaxHealth;
 		timeSinceLastCapture = 0f;
 	}
 
 	protected override void OnUpdate()
 	{
 		if ( IsProxy )
-		{
 			return;
-		}
 
-		var nearbyPlayers = Scene.Components.GetAll<Entity>()
-			.Where( e => e.GameObject.Tags.Has( "player" ) && e.Transform.Position.Distance( Transform.Position ) <= CaptureRadius )
-			.ToList();
+		UpdateCapture();
+	}
 
-		if ( nearbyPlayers.Any() )
+	private void UpdateCapture()
+	{
+		if ( playersInZone.Any() )
 		{
-			var dominantTeam = nearbyPlayers.GroupBy( p => p.GameObject.Tags.First( t => t == "team1" || t == "team2" ) )
+			var dominantTeamStr = playersInZone
+				.GroupBy( p => p.GameObject.Tags.First( t => t is "player" or "bot" ) )
 				.OrderByDescending( g => g.Count() )
 				.First().Key;
+
+			var dominantTeam = Teams.GetTeamFromTag( dominantTeamStr );
 
 			if ( dominantTeam != ControllingTeam )
 			{
@@ -71,47 +68,55 @@ public sealed class CaptureZoneEntity : Component, Component.IDamageable, Compon
 
 			timeSinceLastCapture = 0f;
 		}
-		else if ( timeSinceLastCapture > 5f && ControllingTeam != "Neutral" )
+		else if ( timeSinceLastCapture > 5f && ControllingTeam != Team.Neutral )
 		{
 			CaptureProgress += Time.Delta / CaptureTime;
 			if ( CaptureProgress >= 1f )
 			{
-				ControllingTeam = "Neutral";
+				ControllingTeam = Team.Neutral;
 				CaptureProgress = 0f;
 				OnPointNeutralized();
 			}
 		}
 	}
 
-	public void OnDamage( in DamageInfo damage )
+	void Component.ITriggerListener.OnTriggerEnter( Collider other )
 	{
-		if ( Health <= 0 ) return;
-
-		Health = Math.Clamp( Health - damage.Damage, 0f, MaxHealth );
-
-		if ( Health <= 0 )
+		var entity = other.GameObject.Components.Get<Entity>();
+		if ( entity != null && entity.GameObject.Tags.Has( "player" ) )
 		{
-			OnPointDestroyed();
+			playersInZone.Add( entity );
+			if ( playersInZone.Count == 1 )
+			{
+				OnStartCapture();
+			}
 		}
 	}
 
-	private void OnHealthChanged()
+	void Component.ITriggerListener.OnTriggerExit( Collider other )
 	{
+		var entity = other.GameObject.Components.Get<Entity>();
+		if ( entity != null )
+		{
+			playersInZone.Remove( entity );
+		}
+	}
+
+	private void OnStartCapture()
+	{
+		Log.Info( $"{PointName} is being captured!" );
+		// TODO: Send a lightwave in radius to alert other players
 	}
 
 	private void OnPointCaptured()
 	{
 		Log.Info( $"{PointName} has been captured by {ControllingTeam}!" );
+		// TODO: Set as spawn point for the capturing team
+		// TODO: Update score (see scoring system in design document)
 	}
 
 	private void OnPointNeutralized()
 	{
 		Log.Info( $"{PointName} has been neutralized!" );
-	}
-
-	private void OnPointDestroyed()
-	{
-		Log.Info( $"{PointName} has been destroyed!" );
-		GameObject.Destroy();
 	}
 }

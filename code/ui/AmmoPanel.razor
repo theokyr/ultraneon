@@ -16,39 +16,19 @@
 	[Property]
 	public PlayerInventory Inventory { get; set; }
 
-	private WeaponBaseNeon lastWeapon;
 	public int CurrentAmmo { get; set; }
 	public int MaxAmmo { get; set; }
 
-	protected override void OnAfterTreeRender( bool firstTime )
-	{
-		base.OnAfterTreeRender( firstTime );
-
-		if ( firstTime )
-		{
-			lastWeapon = Inventory.activeWeapon;
-		}
-	}
-
 	public override void Tick()
 	{
-		if ( Inventory.activeWeapon == null )
+		if ( Inventory?.ActiveWeapon == null )
 		{
-			lastWeapon = null;
-		}
-		else
-		{
-			lastWeapon = Inventory.activeWeapon;
-		}
-		
-		if (lastWeapon == null)
-		{
-			CurrentAmmo = 0;
-			MaxAmmo = 0;
+			CurrentAmmo = -1;
+			MaxAmmo = -1;
 			return;
 		}
-		
-		CurrentAmmo = 0; // TODO: lastWeapon.currentAmmo
-		MaxAmmo = lastWeapon.clipSize; // TODO: lastWeapon.maxAmmo
+
+		CurrentAmmo = Inventory.ActiveWeapon.CurrentAmmo;
+		MaxAmmo = Inventory.ActiveWeapon.ClipSize;
 	}
 }

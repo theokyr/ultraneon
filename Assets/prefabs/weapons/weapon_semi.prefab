@@ -7,23 +7,29 @@
     "Enabled": true,
     "Components": [
       {
-        "__type": "WeaponBaseNeon",
+        "__type": "Ultraneon.WeaponBaseNeon",
         "__guid": "b147493a-3f49-4eac-9567-7d649d923e5a",
-        "clipSize": 25,
-        "equipTime": 1,
-        "fireRate": 0.2,
-        "headShotMultiplier": 4,
+        "CurrentAmmo": 25,
+        "ClipSize": 25,
+        "EquipTime": 1,
+        "FireRate": 0.2,
+        "HeadshotMultiplier": 4,
         "ImpactPrefab": {
           "_type": "gameobject",
           "prefab": "prefabs/effects/weapons/impacteffect.prefab"
         },
-        "isPickedUp": false,
-        "isReloading": false,
-        "isSemiAuto": true,
-        "reloadTime": 2,
-        "shootSound": "sounds/placeholders/pistol_shoot.sound",
-        "weaponDamage": 50,
-        "weaponType": "semi"
+        "IsPickedUp": false,
+        "IsSemiAuto": true,
+        "ReloadTime": 2,
+        "ShootSound": "sounds/placeholders/pistol_shoot.sound",
+        "SinceEquipped": {
+          "Relative": 13751.998
+        },
+        "SinceShot": {
+          "Relative": 13751.998
+        },
+        "WeaponDamage": 50,
+        "WeaponType": "Semi"
       },
       {
         "__type": "Sandbox.SkinnedModelRenderer",

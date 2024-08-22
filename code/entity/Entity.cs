@@ -6,7 +6,7 @@ using System.Threading.Channels;
 
 [Category("Ultraneon")]
 [Icon( "settings_accessibility" )]
-public sealed class Entity : Component, Component.IDamageable, Component.INetworkListener
+public class Entity : Component, Component.IDamageable, Component.INetworkListener
 {
 	[Property, ReadOnly] private float maxHealth { get; set; } = 100f;
 	[Property,ReadOnly] public bool isAlive { get;private set; } = true;

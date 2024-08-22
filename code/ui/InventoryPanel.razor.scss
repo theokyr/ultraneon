@@ -1,0 +1,38 @@
+﻿InventoryPanel {
+  .hotbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    gap: 8px;
+    font-family: Material Icons;
+  }
+
+  .items {
+    background-color: #0004;
+    opacity: 1;
+    border-radius: 3px;
+    padding: 30px 120px;
+    color: dimgrey;
+    font-weight: 400;
+    font-size: 35px;
+    font-family: Cascadia Code;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+
+    .item-image {
+      width: 128px;
+      height: 128px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .weapon-pistol {
+      //background: url(data:image/gif;base64,R0lGODlhAQABAAAAACw=);
+    }
+  }
+}

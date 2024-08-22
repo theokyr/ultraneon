@@ -9,7 +9,8 @@
 		@foreach ( var point in CapturePoints )
 		{
 			<div class="radar-blip @point.ControllingTeam" style="left: @( point.RadarX )%; top: @( point.RadarY )%;">
-				<div class="health-indicator" style="width: @( point.Health / point.MaxHealth * 100 )%"></div>
+				<div>@(point.ControllingTeam)</div>
+				<div class="capture-progress-indicator" style="width: @( point.CaptureProgress / 100 )%"></div>
 			</div>
 		}
 	</div>
@@ -49,6 +50,6 @@
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine( CapturePoints.Select( p => HashCode.Combine( p.RadarX, p.RadarY, p.ControllingTeam, p.Health ) ) );
+		return HashCode.Combine( CapturePoints.Select( p => HashCode.Combine( p.RadarX, p.RadarY, p.ControllingTeam, p.CaptureProgress ) ) );
 	}
 }

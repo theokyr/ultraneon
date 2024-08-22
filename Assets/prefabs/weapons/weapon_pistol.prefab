@@ -3,34 +3,39 @@
     "__guid": "cd2d7e06-735b-4d77-ae08-f48f8e06e45a",
     "Flags": 0,
     "Name": "weapon_pistol",
-    "Position": "0,0,64",
     "Tags": "trigger",
     "Enabled": true,
     "Components": [
       {
-        "__type": "WeaponBaseNeon",
+        "__type": "Ultraneon.WeaponBaseNeon",
         "__guid": "a1ae995c-834b-4ce3-8278-6d37b76ee3a3",
-        "clipSize": 12,
-        "equipTime": 0.3,
-        "fireRate": 0.4,
-        "headShotMultiplier": 10,
+        "CurrentAmmo": 12,
+        "ClipSize": 12,
+        "EquipTime": 0.3,
+        "FireRate": 0.4,
+        "HeadshotMultiplier": 10,
         "ImpactPrefab": {
           "_type": "gameobject",
           "prefab": "prefabs/effects/weapons/impacteffect.prefab"
         },
-        "isPickedUp": false,
-        "isReloading": false,
-        "isSemiAuto": true,
-        "reloadTime": 2,
-        "shootSound": "sounds/weapons/pistol_laser_shoot_1.sound",
+        "IsPickedUp": false,
+        "IsSemiAuto": true,
+        "ReloadTime": 2,
+        "ShootSound": "sounds/weapons/pistol_laser_shoot_1.sound",
+        "SinceEquipped": {
+          "Relative": 15375.976
+        },
+        "SinceShot": {
+          "Relative": 15375.976
+        },
         "Viewmodel": {
           "_type": "component",
           "component_id": "b4a4919a-28f1-425e-9644-26a585f5c74d",
           "go": "cd2d7e06-735b-4d77-ae08-f48f8e06e45a",
           "component_type": "SkinnedModelRenderer"
         },
-        "weaponDamage": 35,
-        "weaponType": "pistol",
+        "WeaponDamage": 35,
+        "WeaponType": "Pistol",
         "Worldmodel": {
           "_type": "component",
           "component_id": "6eb81083-303f-425f-9279-68e5523e2cee",

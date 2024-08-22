@@ -610,21 +610,26 @@
       ]
     },
     {
-      "__guid": "04e992a7-d061-4b82-8505-0186af1e59ac",
+      "__guid": "ff9c3881-ceb5-4b55-9046-cb597e8d4786",
       "Flags": 0,
-      "Name": "Object",
-      "Position": "432,-138,68",
+      "Name": "Cube",
+      "Position": "0,-276.8925,74.56207",
       "Enabled": true,
       "Components": [
         {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "142af44b-896d-4f21-b347-f5d838ea9571",
+          "BodyGroups": 18446744073709551615,
+          "Model": "models/dev/box.vmdl",
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
           "__type": "CaptureZoneEntity",
-          "__guid": "2df00d8b-025d-4b1e-bcc9-6c715ca39dba",
+          "__guid": "80c2b359-9700-4704-9e85-a3f83cc8bfb2",
           "CaptureProgress": 0,
-          "CaptureRadius": 5,
           "CaptureTime": 10,
           "ControllingTeam": "Neutral",
-          "Health": 0,
-          "MaxHealth": 100,
           "PointName": "Capture Zone"
         }
       ]

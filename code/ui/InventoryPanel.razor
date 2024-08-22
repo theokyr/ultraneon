@@ -2,23 +2,26 @@
 @using Sandbox.UI
 @inherits Panel
 @namespace Ultraneon.UI
+@attribute [StyleSheet]
 
-<root class="hotbar">
-	@for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
-	{
-		int slotIndex = i;
-		<div class="items @( Inventory?.SelectedSlot == slotIndex ? "selected" : "" )">
-			<div class="item-number">@( slotIndex + 1 )</div>
-			@if ( Inventory?.weapons != null && Inventory.weapons.Length > slotIndex && Inventory.weapons[slotIndex] != null )
-			{
-				<div class="item-name">@Inventory.weapons[slotIndex].GameObject.Name</div>
-			}
-			else
-			{
-				<div class="item-name">Empty</div>
-			}
-		</div>
-	}
+<root>
+	<div class="hotbar">
+		@for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
+		{
+			int slotIndex = i;
+			<div class="items @( Inventory?.SelectedSlot == slotIndex ? "selected" : "" )">
+				<div class="item-number">@( slotIndex + 1 )</div>
+				@if ( Inventory?.Weapons != null && Inventory.Weapons.Length > slotIndex && Inventory.Weapons[slotIndex] != null )
+				{
+					<div class="item-name">@Inventory.Weapons[slotIndex].GameObject.Name</div>
+				}
+				else
+				{
+					<div class="item-name">Empty</div>
+				}
+			</div>
+		}
+	</div>
 </root>
 
 @code
@@ -54,11 +57,11 @@
 
 	private bool HasInventoryChanged()
 	{
-		if ( Inventory == null || Inventory.weapons == null ) return false;
+		if ( Inventory == null || Inventory.Weapons == null ) return false;
 
 		for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
 		{
-			if ( Inventory.weapons[i] != lastWeapons[i] )
+			if ( Inventory.Weapons[i] != lastWeapons[i] )
 			{
 				return true;
 			}
@@ -71,12 +74,12 @@
 	{
 		for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
 		{
-			lastWeapons[i] = Inventory.weapons[i];
+			lastWeapons[i] = Inventory.Weapons[i];
 		}
 	}
 
 	protected override int BuildHash()
 	{
-		return System.HashCode.Combine( Inventory?.SelectedSlot, string.Join( ",", Inventory?.weapons?.Select( w => w?.GameObject.Name ?? "Empty" ) ?? Array.Empty<string>() ) );
+		return System.HashCode.Combine( Inventory?.SelectedSlot, string.Join( ",", Inventory?.Weapons?.Select( w => w?.GameObject.Name ?? "Empty" ) ?? Array.Empty<string>() ) );
 	}
 }
