@@ -5,22 +5,32 @@
 @attribute [StyleSheet]
 
 <root>
-	<div class="hotbar">
-		@for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
-		{
-			int slotIndex = i;
-			<div class="item @( Inventory?.ActiveWeapon != null && Inventory?.SelectedSlot == slotIndex ? "selected" : "" )">
-				<div class="item-number">@( slotIndex + 1 )</div>
-				@if ( Inventory?.Weapons != null && Inventory.Weapons.Length > slotIndex && Inventory.Weapons[slotIndex] != null )
-				{
-					<div class="item-name">@Inventory.Weapons[slotIndex].GameObject.Name</div>
-				}
-				else
-				{
-					<div class="item-name">Empty</div>
-				}
+	<div class="hotbar-wrapper">
+		<div class="hotbar">
+			@for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
+			{
+				int slotIndex = i;
+				<div class="item @( Inventory?.ActiveWeapon != null && Inventory?.SelectedSlot == slotIndex ? "selected" : "" )">
+					<div class="item-number">@( slotIndex + 1 )</div>
+					<div class="item-content">
+						@if ( Inventory?.Weapons != null && Inventory.Weapons.Length > slotIndex && Inventory.Weapons[slotIndex] != null )
+						{
+							<div class="item-name">@Inventory.Weapons[slotIndex].GameObject.Name</div>
+						}
+						else
+						{
+							<div class="item-name"></div>
+						}
+					</div>
+				</div>
+			}
+			<div class="item action holster">
+				<div class="item-number">5</div>
+				<div class="item-content">
+					<div class="icon">pan_tool</div>
+				</div>
 			</div>
-		}
+		</div>
 	</div>
 </root>
 
