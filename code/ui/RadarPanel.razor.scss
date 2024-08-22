@@ -13,6 +13,14 @@
     position: relative;
     overflow: hidden;
   }
+  
+  .radar-content {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    transform: rotate(-90deg); // FIXME: hehe
+    border-radius: 50%;
+  }
 
   .radar-blip {
     position: absolute;

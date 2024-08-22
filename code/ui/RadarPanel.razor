@@ -5,49 +5,63 @@
 @attribute [StyleSheet]
 
 <root>
-	<div class="radar-background">
-		@foreach ( var point in CapturePoints )
-		{
-			<div class="radar-blip @point.ControllingTeam" style="left: @( point.RadarX )%; top: @( point.RadarY )%;">
-			</div>
-		}
-	</div>
+    <div class="radar-background">
+        <div class="radar-content">
+            @foreach (var point in CapturePoints)
+            {
+                <div class="radar-blip @point.ControllingTeam" style="left: @(point.MinimapX)%; top: @(point.MinimapY)%;">
+                </div>
+            }
+        </div>
+    </div>
 </root>
 
 @code
 {
-	private Entity playerEntity;
-	public List<CaptureZoneEntity> CapturePoints { get; set; } = new();
+    private Entity playerEntity;
+    private CameraComponent mainCamera;
+    public List<CaptureZoneEntity> CapturePoints { get; set; } = new();
 
-	protected override void OnAfterTreeRender( bool firstTime )
-	{
-		base.OnAfterTreeRender( firstTime );
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
 
-		if ( firstTime )
-		{
-			playerEntity = Scene.Components.GetAll<Entity>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
-			CapturePoints = Scene.Components.GetAll<CaptureZoneEntity>().ToList();
-		}
-	}
+        if (firstTime)
+        {
+            playerEntity = Scene.Components.GetAll<Entity>().FirstOrDefault(x => x.GameObject.Tags.Has("player"));
+            mainCamera = Scene.Components.GetAll<CameraComponent>().FirstOrDefault(x => x.GameObject.Tags.Has("maincamera"));
+            CapturePoints = Scene.Components.GetAll<CaptureZoneEntity>().ToList();
+        }
+    }
 
-	public override void Tick()
-	{
-		if ( playerEntity == null ) return;
+    public override void Tick()
+    {
+        if (playerEntity == null || mainCamera == null) return;
 
-		foreach ( var point in CapturePoints )
-		{
-			var relativePos = point.Transform.Position - playerEntity.Transform.Position;
-			var distance = relativePos.Length;
-			var maxRadarDistance = 1000f;
+        var playerPosition = mainCamera.Transform.Position;
+        var playerRotation = mainCamera.Transform.Rotation;
+        var maxRadarDistance = 1000f;
 
-			var angle = MathF.Atan2( relativePos.y, relativePos.x );
-			point.RadarX = 50f + (distance / maxRadarDistance) * 50f * MathF.Cos( angle );
-			point.RadarY = 50f + (distance / maxRadarDistance) * 50f * MathF.Sin( angle );
-		}
-	}
+        foreach (var point in CapturePoints)
+        {
+            var relativePos = point.Transform.Position - playerPosition;
+            
+            // Rotate the relative position based on player's rotation
+            var rotatedPos = playerRotation.Inverse * relativePos;
+            
+            var distance = rotatedPos.Length;
+            distance = Math.Min(distance, maxRadarDistance);
 
-	protected override int BuildHash()
-	{
-		return HashCode.Combine( CapturePoints.Select( p => HashCode.Combine( p.RadarX, p.RadarY, p.ControllingTeam, p.CaptureProgress ) ) );
-	}
+            // Calculate radar coordinates
+            point.MinimapX = 50f + (rotatedPos.x / maxRadarDistance) * 50f;
+            point.MinimapY = 50f - (rotatedPos.y / maxRadarDistance) * 50f; // Subtract because Y is inverted in UI space
+        }
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(
+            CapturePoints.Select(p => HashCode.Combine(p.MinimapX, p.MinimapY, p.ControllingTeam, p.CaptureProgress))
+        );
+    }
 }

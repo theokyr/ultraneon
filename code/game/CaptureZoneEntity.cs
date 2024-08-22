@@ -12,13 +12,13 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 {
 	[Property]
 	public string PointName { get; set; } = "Capture Zone";
-	
+
 	[Property]
 	public Color NeutralColor { get; set; }
-	
+
 	[Property]
 	public Color PlayerColor { get; set; }
-	
+
 	[Property]
 	public Color EnemyColor { get; set; }
 
@@ -34,8 +34,10 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 	[Property]
 	public ModelRenderer ZoneModel { get; set; }
 
-	public float RadarX { get; set; }
-	public float RadarY { get; set; }
+	public float MinimapX { get; set; }
+	public float MinimapY { get; set; }
+	public Team PreviousTeam { get; set; }
+	public bool HasChanged { get; set; }
 
 	private TimeSince timeSinceLastCapture;
 	private HashSet<BaseNeonCharacterEntity> charactersInZone = new();
@@ -144,12 +146,14 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 	private void OnPointCaptured( Team previousTeam )
 	{
 		Log.Info( $"{PointName} has been captured by {ControllingTeam}!" );
+		PreviousTeam = previousTeam;
 		GameObject.Dispatch( new CaptureZoneEvent( PointName, previousTeam, ControllingTeam ) );
 	}
 
 	private void OnPointNeutralized( Team previousTeam )
 	{
 		Log.Info( $"{PointName} has been neutralized!" );
+		PreviousTeam = previousTeam;
 		GameObject.Dispatch( new CaptureZoneEvent( PointName, previousTeam, Team.Neutral ) );
 	}
 
