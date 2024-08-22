@@ -38,7 +38,7 @@
 		IsEmpty = Weapon.CurrentAmmo <= 0;
 		IsLowWarning = CurrentAmmo <= MaxAmmo / 3;
 
-		Log.Info( $"AmmoPanel Tick: {CurrentAmmo} / ${MaxAmmo}" );
+		Log.Info( $"AmmoPanel Tick: {CurrentAmmo} / {MaxAmmo}" );
 		StateHasChanged(); // FIXME: HACK: We shouldn't need to call this manually. We are consuming one state change too late for some reason
 	}
 
