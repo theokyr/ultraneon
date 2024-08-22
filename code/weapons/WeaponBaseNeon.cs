@@ -196,7 +196,7 @@ namespace Ultraneon
 
 		private bool IsHeadshot( SceneTraceResult shotTrace )
 		{
-			// Implement proper headshot detection logic here
+			// TODO Implement proper headshot detection logic here
 			return shotTrace.Hitbox?.Bone?.Name.ToLower().Contains( "head" ) ?? false;
 		}
 
