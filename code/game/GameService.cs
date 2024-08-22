@@ -22,8 +22,15 @@ public class GameService : Component,
 	[Property]
 	public List<CaptureZoneEntity> CaptureZones { get; set; } = new();
 
+	[Property]
+	public int ScoreCaptureZone { get; set; } = 100;
+
+	[Property]
+	public int ScoreLoseZone { get; set; } = 50;
+
 	private TimeSince roundStartTime;
 	private Dictionary<Team, int> teamScores = new();
+	private bool gameFinished = false;
 
 	protected override void OnStart()
 	{
@@ -69,7 +76,10 @@ public class GameService : Component,
 
 		if ( teamScores[Team.Player] >= ScoreToWin || teamScores[Team.Enemy] >= ScoreToWin )
 		{
-			EndGame();
+			if ( !gameFinished )
+			{
+				EndGame();
+			}
 		}
 	}
 
@@ -96,6 +106,7 @@ public class GameService : Component,
 		var winningTeam = teamScores[Team.Player] > teamScores[Team.Enemy] ? Team.Player : Team.Enemy;
 		Log.Info( $"Game Over! {winningTeam} wins with a score of {teamScores[winningTeam]}" );
 		// TODO: Implement game end logic (show results, restart, etc.)
+		gameFinished = true;
 	}
 
 	public void OnGameEvent( DamageEvent eventArgs )
@@ -118,12 +129,12 @@ public class GameService : Component,
 	{
 		if ( eventArgs.PreviousTeam != Team.Neutral )
 		{
-			teamScores[eventArgs.PreviousTeam] -= 150; // Lose points for losing a zone
+			teamScores[eventArgs.PreviousTeam] += ScoreLoseZone; // Lose points for losing a zone
 		}
 
 		if ( eventArgs.NewTeam != Team.Neutral )
 		{
-			teamScores[eventArgs.NewTeam] += eventArgs.PreviousTeam == Team.Neutral ? 100 : 200; // Points for capturing
+			teamScores[eventArgs.PreviousTeam] += ScoreCaptureZone; // Lose points for losing a zone
 		}
 
 		Log.Info(
