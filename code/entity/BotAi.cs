@@ -75,10 +75,10 @@ public sealed class BotAi : BaseNeonCharacterEntity
 	{
 		float distanceToTarget = Vector3.DistanceBetween( Transform.Position, CurrentTarget.Transform.Position );
 
-		if ( distanceToTarget <= AttackRange )
-		{
-			Log.Info( $"BotAi {EntityName} is attacking {CurrentTarget.EntityName}" );
-		}
+		// if ( distanceToTarget <= AttackRange )
+		// {
+		// 	Log.Info( $"BotAi {EntityName} is attacking {CurrentTarget.EntityName}" );
+		// }
 	}
 
 	private void UpdateAnimation()

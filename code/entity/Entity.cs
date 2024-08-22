@@ -44,7 +44,7 @@ namespace Ultraneon
 
 		public void OnDamage( in DamageInfo damageInfo )
 		{
-			throw new NotImplementedException();
+			return;
 		}
 
 		public virtual void Destroy()
