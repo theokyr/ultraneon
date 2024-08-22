@@ -1,0 +1,20 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "sp_c1_introduction",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "sp_c1_introduction",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [],
+      "IsWhitelistDisabled": false,
+      "Metadata": {
+        "SingleAssetSource": "maps/sp_c1_introduction.vmap"
+      }
+    }
+  }
+}

@@ -7,26 +7,27 @@
     "Enabled": true,
     "Components": [
       {
-        "__type": "Ultraneon.WeaponBaseNeon",
+        "__type": "WeaponBaseNeon",
         "__guid": "c1aa54b4-d7fa-4c6c-a5e7-b3ca0c393fe0",
-        "CurrentAmmo": 5,
-        "ClipSize": 5,
-        "EquipTime": 0.5,
-        "FireRate": 4,
-        "HeadshotMultiplier": 4,
+        "clipSize": 5,
+        "equipTime": 0.5,
+        "fireRate": 4,
+        "hasShoot": false,
+        "headShotMultiplier": 4,
         "ImpactPrefab": {
           "_type": "gameobject",
           "prefab": "prefabs/effects/weapons/impacteffect.prefab"
         },
-        "IsPickedUp": false,
-        "IsSemiAuto": true,
-        "ReloadTime": 6,
-        "ShootSound": "sounds/weapons/bolt_shoot_1.sound",
-        "SinceEquipped": {
-          "Relative": 13746.019
+        "isPickedUp": false,
+        "isReloading": false,
+        "isSemiAuto": true,
+        "reloadTime": 6,
+        "shootSound": "sounds/weapons/bolt_shoot_1.sound",
+        "sinceEquippd": {
+          "Relative": 4944.8877
         },
-        "SinceShot": {
-          "Relative": 13746.019
+        "sinceShot": {
+          "Relative": 4944.8877
         },
         "Viewmodel": {
           "_type": "component",
@@ -34,8 +35,8 @@
           "go": "a3add265-5ca9-4525-955b-45830c25617e",
           "component_type": "SkinnedModelRenderer"
         },
-        "WeaponDamage": 100,
-        "WeaponType": "Bolt",
+        "weaponDamage": 100,
+        "weaponType": "bolt",
         "Worldmodel": {
           "_type": "component",
           "component_id": "c427806b-1128-4c06-a279-827c42fa8211",
