@@ -27,6 +27,7 @@ namespace Ultraneon
 
 			HandleWeaponSelection();
 			HandleWeaponFiring();
+			HandleWeaponReload();
 		}
 
 		private void HandleWeaponSelection()
@@ -72,6 +73,14 @@ namespace Ultraneon
 			else if ( Input.Down( "attack1" ) && ActiveWeapon != null && !ActiveWeapon.IsSemiAuto )
 			{
 				ActiveWeapon.Shoot();
+			}
+		}
+
+		private void HandleWeaponReload()
+		{
+			if ( Input.Pressed( "reload" ) )
+			{
+				ActiveWeapon?.StartReload();
 			}
 		}
 

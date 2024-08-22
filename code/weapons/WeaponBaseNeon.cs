@@ -16,11 +16,10 @@ namespace Ultraneon
 		[Property, ReadOnly]
 		public bool IsPickedUp { get; private set; }
 
-		[Property, ReadOnly]
 		public TimeSince SinceEquipped { get; private set; }
 
-		[Property, ReadOnly]
 		public TimeSince SinceShot { get; private set; }
+		public TimeSince TimeInReload { get; private set; }
 
 		[Property, Group( "Viewmodel" )]
 		public SkinnedModelRenderer Viewmodel { get; set; }
@@ -65,17 +64,18 @@ namespace Ultraneon
 		public GameObject ImpactPrefab { get; set; }
 
 		public GameObject Owner { get; private set; }
-		
+
 		public int WeaponSlot { get; private set; }
 
 		private bool _hasShot;
-		private bool _isReloading;
+		public bool IsReloading { get; private set; }
 
 		protected override void OnStart()
 		{
 			base.OnStart();
 			CurrentAmmo = ClipSize;
 		}
+
 
 		protected override void OnUpdate()
 		{
@@ -89,6 +89,19 @@ namespace Ultraneon
 			if ( !Input.Down( "attack1" ) )
 			{
 				_hasShot = false;
+			}
+
+			if ( IsReloading )
+			{
+				UpdateReload();
+			}
+		}
+
+		private void UpdateReload()
+		{
+			if ( TimeInReload >= ReloadTime )
+			{
+				CompleteReload();
 			}
 		}
 
@@ -113,7 +126,7 @@ namespace Ultraneon
 			return SinceEquipped >= EquipTime &&
 			       SinceShot >= FireRate &&
 			       (!IsSemiAuto || !_hasShot) &&
-			       !_isReloading &&
+			       !IsReloading &&
 			       CurrentAmmo > 0;
 		}
 
@@ -122,10 +135,10 @@ namespace Ultraneon
 			Sound.Play( ShootSound );
 			_hasShot = true;
 			CurrentAmmo--;
-			Log.Info($"Weapon {GameObject.Name} fired. Current Ammo: {CurrentAmmo}/{ClipSize}");
+			Log.Info( $"Weapon {GameObject.Name} fired. Current Ammo: {CurrentAmmo}/{ClipSize}" );
 
-			GameObject.Dispatch(new WeaponStateChangedEvent(this));
-			
+			GameObject.Dispatch( new WeaponStateChangedEvent( this ) );
+
 			Viewmodel?.Set( "b_attack", true );
 
 			var camera = Scene.GetAllComponents<CameraComponent>().FirstOrDefault( x => x.IsMainCamera );
@@ -195,22 +208,27 @@ namespace Ultraneon
 
 		public void StartReload()
 		{
-			if ( _isReloading || CurrentAmmo == ClipSize ) return;
-			_isReloading = true;
-			
+			if ( IsReloading || CurrentAmmo == ClipSize ) return;
+			IsReloading = true;
+			TimeInReload = 0f;
+
 			// TODO: Play reload animation
 			// TODO: Play reload sound
-			// TODO: Schedule CompleteReload() after ReloadTime seconds
-			
-			CompleteReload();
+
+			Log.Info( $"Weapon {GameObject.Name} started reloading." );
+			GameObject.Dispatch( new WeaponStateChangedEvent( this ) );
 		}
+
 
 		private void CompleteReload()
 		{
 			CurrentAmmo = ClipSize;
-			_isReloading = false;
-			Log.Info($"Weapon {GameObject.Name} reloaded. Current Ammo: {CurrentAmmo}/{ClipSize}");
-			GameObject.Dispatch(new WeaponStateChangedEvent(this));
+			IsReloading = false;
+			Log.Info( $"Weapon {GameObject.Name} reloaded. Current Ammo: {CurrentAmmo}/{ClipSize}" );
+			GameObject.Dispatch( new WeaponStateChangedEvent( this ) );
+
+			// TODO: Play reload complete animation
+			// TODO: Play reload complete sound
 		}
 
 		public void SetVisible( bool visible )

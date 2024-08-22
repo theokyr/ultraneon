@@ -4,8 +4,8 @@
 @attribute [StyleSheet]
 
 <root>
-	<div class="ammo-display">
-		<div class="current-ammo">@CurrentAmmo</div>
+	<div class="ammo-display @( IsReloading ? "reloading" : "" )">
+		<div class="current-ammo @( IsEmpty ? "empty" : "" ) @( IsLowWarning ? "low-warning" : "" )">@CurrentAmmo</div>
 		<div class="ammo-separator">/</div>
 		<div class="max-ammo">@MaxAmmo</div>
 	</div>
@@ -18,6 +18,9 @@
 
 	public int CurrentAmmo { get; set; }
 	public int MaxAmmo { get; set; }
+	public bool IsReloading { get; set; }
+	public bool IsLowWarning { get; set; }
+	public bool IsEmpty { get; set; }
 
 	public override void Tick()
 	{
@@ -31,8 +34,12 @@
 
 		CurrentAmmo = Weapon.CurrentAmmo;
 		MaxAmmo = Weapon.ClipSize;
+		IsReloading = Weapon.IsReloading;
+		IsEmpty = Weapon.CurrentAmmo <= 0;
+		IsLowWarning = CurrentAmmo <= MaxAmmo / 3;
+
 		Log.Info( $"AmmoPanel Tick: {CurrentAmmo} / ${MaxAmmo}" );
-		StateHasChanged(); // FIXME: We shouldn't need to call this manually
+		StateHasChanged(); // FIXME: HACK: We shouldn't need to call this manually. We are consuming one state change too late for some reason
 	}
 
 	protected override int BuildHash()
