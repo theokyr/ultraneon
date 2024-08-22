@@ -22,23 +22,15 @@
     transform: translate(-50%, -50%);
 
     &.Neutral {
-      background-color: gray;
+      background-color: #5A738B;
     }
 
-    &.team1 {
-      background-color: blue;
+    &.Player {
+      background-color: #54be35;
     }
 
-    &.team2 {
-      background-color: red;
-    }
-
-    .health-indicator {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 2px;
-      background-color: green;
+    &.Enemy {
+      background-color: #f8356b;
     }
   }
 }

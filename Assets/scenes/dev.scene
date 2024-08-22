@@ -253,11 +253,11 @@
           "AttackRange": 200,
           "CurrentTeam": "Enemy",
           "EntityName": "enemy_regular",
-          "Health": 0,
+          "Health": 100,
           "Id": "00000000-0000-0000-0000-000000000000",
           "isAlive": true,
           "MaxHealth": 100,
-          "StopDistance": 300
+          "StopDistance": 600
         },
         {
           "__type": "Sandbox.SkinnedModelRenderer",
@@ -614,7 +614,7 @@
       "__guid": "ff9c3881-ceb5-4b55-9046-cb597e8d4786",
       "Flags": 0,
       "Name": "Capture Point A",
-      "Position": "0,-276.8925,74.56207",
+      "Position": "-62.14972,-368.2696,74.56186",
       "Enabled": true,
       "Components": [
         {
@@ -629,9 +629,68 @@
           "__type": "CaptureZoneEntity",
           "__guid": "80c2b359-9700-4704-9e85-a3f83cc8bfb2",
           "CaptureProgress": 0,
-          "CaptureTime": 10,
+          "CaptureTime": 3,
           "ControllingTeam": "Neutral",
-          "PointName": "Capture Zone"
+          "EnemyColor": "0.97255,0.20784,0.41961,1",
+          "NeutralColor": "0.35294,0.45098,0.5451,1",
+          "PlayerColor": "0.32941,0.7451,0.20784,1",
+          "PointName": "A",
+          "ZoneModel": {
+            "_type": "component",
+            "component_id": "142af44b-896d-4f21-b347-f5d838ea9571",
+            "go": "ff9c3881-ceb5-4b55-9046-cb597e8d4786",
+            "component_type": "ModelRenderer"
+          }
+        },
+        {
+          "__type": "Sandbox.BoxCollider",
+          "__guid": "1f979f6f-708c-4905-84f9-68d0c52cb779",
+          "Center": "0,0,0",
+          "IsTrigger": true,
+          "Scale": "97.20003,147.7998,87.00007",
+          "Static": false
+        }
+      ]
+    },
+    {
+      "__guid": "31b1ea49-bbb5-4516-94f9-5b81e6c76fa7",
+      "Flags": 0,
+      "Name": "Capture Point B",
+      "Position": "-392.749,-204.585,74.56193",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "01f3292d-324b-4bd9-a43d-d101ccbc122c",
+          "BodyGroups": 18446744073709551615,
+          "Model": "models/dev/box.vmdl",
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "CaptureZoneEntity",
+          "__guid": "dd3295c1-9b2f-4728-b62c-368923cdb77b",
+          "CaptureProgress": 0,
+          "CaptureTime": 3,
+          "ControllingTeam": "Neutral",
+          "EnemyColor": "0.97255,0.20784,0.41961,1",
+          "NeutralColor": "0.35294,0.45098,0.5451,1",
+          "PlayerColor": "0.32941,0.7451,0.20784,1",
+          "PointName": "B",
+          "ZoneModel": {
+            "_type": "component",
+            "component_id": "01f3292d-324b-4bd9-a43d-d101ccbc122c",
+            "go": "31b1ea49-bbb5-4516-94f9-5b81e6c76fa7",
+            "component_type": "ModelRenderer"
+          }
+        },
+        {
+          "__type": "Sandbox.BoxCollider",
+          "__guid": "c034c522-52f5-41dd-bb59-7bfdea118a95",
+          "Center": "0,0,0",
+          "IsTrigger": true,
+          "Scale": "97.20003,147.7998,87.00007",
+          "Static": false
         }
       ]
     },

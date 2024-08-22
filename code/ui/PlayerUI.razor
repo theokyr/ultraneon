@@ -31,7 +31,6 @@
 		base.OnEnabled();
 		Player = Scene.GetAllComponents<PlayerNeon>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
 		Inventory = Player?.GameObject.Components.Get<PlayerInventory>();
-		Log.Info( $"PlayerUI OnEnabled: player = {Player?.GameObject.Name ?? "None"}, inventory = {(Inventory != null ? "Valid" : "None")}" );
 	}
 
 	protected override int BuildHash()
@@ -45,11 +44,6 @@
 			Inventory?.ActiveWeapon?.CurrentAmmo,
 			Inventory?.ActiveWeapon?.ClipSize
 		);
-
-		Log.Info( $"PlayerUI BuildHash: Health={((BaseNeonCharacterEntity)Player).Health}, " +
-		          $"SelectedSlot={Inventory?.SelectedSlot}, " +
-		          $"ActiveWeapon={Inventory?.ActiveWeapon?.GameObject.Name ?? "None"}, " +
-		          $"Ammo={Inventory?.ActiveWeapon?.CurrentAmmo ?? -1}/{Inventory?.ActiveWeapon?.ClipSize ?? -1}" );
 
 		return hash;
 	}

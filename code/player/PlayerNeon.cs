@@ -8,9 +8,6 @@ namespace Ultraneon
 {
 	public class PlayerNeon : BaseNeonCharacterEntity
 	{
-		[Sync]
-		public Team CurrentTeam { get; set; } = Team.Player;
-
 		[Property]
 		public float CaptureTime { get; set; } = 15f;
 
@@ -39,6 +36,7 @@ namespace Ultraneon
 			base.OnStart();
 			if ( IsProxy ) return;
 
+			CurrentTeam = Team.Player;
 			Health = MaxHealth;
 			Inventory = Components.Get<PlayerInventory>();
 		}

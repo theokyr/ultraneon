@@ -12,6 +12,15 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 {
 	[Property]
 	public string PointName { get; set; } = "Capture Zone";
+	
+	[Property]
+	public Color NeutralColor { get; set; }
+	
+	[Property]
+	public Color PlayerColor { get; set; }
+	
+	[Property]
+	public Color EnemyColor { get; set; }
 
 	[Property]
 	public float CaptureTime { get; set; } = 15f;
@@ -22,16 +31,20 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 	[Property, HostSync]
 	public float CaptureProgress { get; set; } = 0f;
 
+	[Property]
+	public ModelRenderer ZoneModel { get; set; }
+
 	public float RadarX { get; set; }
 	public float RadarY { get; set; }
 
 	private TimeSince timeSinceLastCapture;
-	private HashSet<PlayerNeon> playersInZone = new();
+	private HashSet<BaseNeonCharacterEntity> charactersInZone = new();
 
 	protected override void OnStart()
 	{
 		base.OnStart();
 		timeSinceLastCapture = 0f;
+		UpdateZoneVisuals();
 	}
 
 	protected override void OnUpdate()
@@ -40,20 +53,21 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 			return;
 
 		UpdateCapture();
+		UpdateZoneVisuals();
 	}
 
 	private void UpdateCapture()
 	{
-		if ( playersInZone.Any() )
+		if ( charactersInZone.Any() )
 		{
-			var dominantTeam = playersInZone
+			var dominantTeam = charactersInZone
 				.GroupBy( p => p.CurrentTeam )
 				.OrderByDescending( g => g.Count() )
 				.First().Key;
 
 			if ( dominantTeam != ControllingTeam )
 			{
-				CaptureProgress += Time.Delta / CaptureTime;
+				CaptureProgress += Time.Delta / CaptureTime * charactersInZone.Count( p => p.CurrentTeam == dominantTeam );
 				if ( CaptureProgress >= 1f )
 				{
 					var previousTeam = ControllingTeam;
@@ -82,25 +96,42 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 		}
 	}
 
-	void ITriggerListener.OnTriggerEnter( Collider other )
+	private void UpdateZoneVisuals()
 	{
-		var player = other.GameObject.Components.Get<PlayerNeon>();
-		if ( player != null )
+		if ( ZoneModel != null )
 		{
-			playersInZone.Add( player );
-			if ( playersInZone.Count == 1 )
+			Color teamColor = ControllingTeam switch
+			{
+				Team.Player => PlayerColor,
+				Team.Enemy => EnemyColor,
+				_ => NeutralColor
+			};
+
+			ZoneModel.Tint = teamColor;
+
+			// TODO: Add particle effects or other visual indicators for capture progress
+		}
+	}
+
+	public void OnTriggerEnter( Collider other )
+	{
+		var character = other.GameObject.Components.Get<BaseNeonCharacterEntity>();
+		if ( character != null )
+		{
+			charactersInZone.Add( character );
+			if ( charactersInZone.Count == 1 )
 			{
 				OnStartCapture();
 			}
 		}
 	}
 
-	void ITriggerListener.OnTriggerExit( Collider other )
+	public void OnTriggerExit( Collider other )
 	{
 		var player = other.GameObject.Components.Get<PlayerNeon>();
 		if ( player != null )
 		{
-			playersInZone.Remove( player );
+			charactersInZone.Remove( player );
 		}
 	}
 
@@ -120,5 +151,10 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 	{
 		Log.Info( $"{PointName} has been neutralized!" );
 		GameObject.Dispatch( new CaptureZoneEvent( PointName, previousTeam, Team.Neutral ) );
+	}
+
+	public bool IsPlayerInZone( PlayerNeon player )
+	{
+		return charactersInZone.Contains( player );
 	}
 }
