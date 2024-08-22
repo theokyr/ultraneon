@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sandbox.Events;
 using Ultraneon;
 
 [Category( "Ultraneon" )]
@@ -24,7 +25,7 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 	public float RadarY { get; set; }
 
 	private TimeSince timeSinceLastCapture;
-	private HashSet<Entity> playersInZone = new();
+	private HashSet<PlayerNeon> playersInZone = new();
 
 	protected override void OnStart()
 	{
@@ -44,21 +45,20 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 	{
 		if ( playersInZone.Any() )
 		{
-			var dominantTeamStr = playersInZone
-				.GroupBy( p => p.GameObject.Tags.First( t => t is "player" or "bot" ) )
+			var dominantTeam = playersInZone
+				.GroupBy( p => p.CurrentTeam )
 				.OrderByDescending( g => g.Count() )
 				.First().Key;
-
-			var dominantTeam = Teams.GetTeamFromTag( dominantTeamStr );
 
 			if ( dominantTeam != ControllingTeam )
 			{
 				CaptureProgress += Time.Delta / CaptureTime;
 				if ( CaptureProgress >= 1f )
 				{
+					var previousTeam = ControllingTeam;
 					ControllingTeam = dominantTeam;
 					CaptureProgress = 0f;
-					OnPointCaptured();
+					OnPointCaptured( previousTeam );
 				}
 			}
 			else
@@ -73,19 +73,20 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 			CaptureProgress += Time.Delta / CaptureTime;
 			if ( CaptureProgress >= 1f )
 			{
+				var previousTeam = ControllingTeam;
 				ControllingTeam = Team.Neutral;
 				CaptureProgress = 0f;
-				OnPointNeutralized();
+				OnPointNeutralized( previousTeam );
 			}
 		}
 	}
 
-	void Component.ITriggerListener.OnTriggerEnter( Collider other )
+	void ITriggerListener.OnTriggerEnter( Collider other )
 	{
-		var entity = other.GameObject.Components.Get<Entity>();
-		if ( entity != null && entity.GameObject.Tags.Has( "player" ) )
+		var player = other.GameObject.Components.Get<PlayerNeon>();
+		if ( player != null )
 		{
-			playersInZone.Add( entity );
+			playersInZone.Add( player );
 			if ( playersInZone.Count == 1 )
 			{
 				OnStartCapture();
@@ -93,12 +94,12 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 		}
 	}
 
-	void Component.ITriggerListener.OnTriggerExit( Collider other )
+	void ITriggerListener.OnTriggerExit( Collider other )
 	{
-		var entity = other.GameObject.Components.Get<Entity>();
-		if ( entity != null )
+		var player = other.GameObject.Components.Get<PlayerNeon>();
+		if ( player != null )
 		{
-			playersInZone.Remove( entity );
+			playersInZone.Remove( player );
 		}
 	}
 
@@ -108,15 +109,15 @@ public sealed class CaptureZoneEntity : Component, Component.ITriggerListener
 		// TODO: Send a lightwave in radius to alert other players
 	}
 
-	private void OnPointCaptured()
+	private void OnPointCaptured( Team previousTeam )
 	{
 		Log.Info( $"{PointName} has been captured by {ControllingTeam}!" );
-		// TODO: Set as spawn point for the capturing team
-		// TODO: Update score (see scoring system in design document)
+		GameObject.Dispatch( new CaptureZoneEvent( PointName, previousTeam, ControllingTeam ) );
 	}
 
-	private void OnPointNeutralized()
+	private void OnPointNeutralized( Team previousTeam )
 	{
 		Log.Info( $"{PointName} has been neutralized!" );
+		GameObject.Dispatch( new CaptureZoneEvent( PointName, previousTeam, Team.Neutral ) );
 	}
 }

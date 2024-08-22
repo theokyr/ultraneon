@@ -1,37 +1,71 @@
 using Sandbox;
-using System;
+using Ultraneon;
 
-public sealed class SpotAi : Component, Component.ITriggerListener
+public sealed class SpotAi : Component
 {
-	[Property, ReadOnly] public GameObject player { get; set; }
-	[Property, ReadOnly] public Vector3 lastSeenLocation { get; set; }
-	public void OnTriggerEnter( Collider other )
+	[Property]
+	public float DetectionRadius { get; set; } = 500f;
+
+	[Property]
+	public float DetectionInterval { get; set; } = 0.5f;
+
+	private BotAi ParentBot { get; set; }
+	private TimeSince TimeSinceLastDetection { get; set; }
+
+	protected override void OnStart()
 	{
-		if ( other.GameObject.Name == "player" )
+		base.OnStart();
+		ParentBot = GameObject.Parent?.Components.Get<BotAi>();
+
+		if ( ParentBot == null )
 		{
-			player = other.GameObject;
+			Log.Warning( $"SpotAi on {GameObject.Name} could not find a parent BotAi component." );
 		}
-
 	}
 
-	public void OnTriggerExit( Collider other )
+	protected override void OnUpdate()
 	{
-		player = null;
-	}
+		base.OnUpdate();
 
-	protected override void OnFixedUpdate()
-	{
-		base.OnFixedUpdate();
+		if ( ParentBot == null || !ParentBot.isAlive ) return;
 
-		if ( player != null )
+		if ( TimeSinceLastDetection >= DetectionInterval )
 		{
-			var spotTrace = Scene.Trace.Ray( Transform.Position, player.Transform.Position )
-				.Run();
-			DebugOverlay.Trace( spotTrace );
-			if ( spotTrace.Hit && spotTrace.GameObject.Tags.Has( "player" ) )
+			DetectPlayers();
+			TimeSinceLastDetection = 0;
+		}
+	}
+
+	private void DetectPlayers()
+	{
+		var nearbyEntities = Scene.GetAllComponents<PlayerNeon>();
+
+		foreach ( var player in nearbyEntities )
+		{
+			if ( player.isAlive && player.CurrentTeam != ParentBot.CurrentTeam )
 			{
-				GameObject.Parent.Components.Get<EnemyAi>().Target = spotTrace.GameObject;
+				float distance = Vector3.DistanceBetween( Transform.Position, player.Transform.Position );
+
+				if ( distance <= DetectionRadius )
+				{
+					if ( IsPlayerVisible( player ) )
+					{
+						ParentBot.SetTarget( player );
+						return;
+					}
+				}
 			}
 		}
+	}
+
+	private bool IsPlayerVisible( PlayerNeon player )
+	{
+		var trace = Scene.Trace.Ray( Transform.Position, player.Transform.Position )
+			.WithoutTags( "bot" )
+			.Run();
+
+		DebugOverlay.Trace( trace );
+
+		return trace.Hit && trace.GameObject.Components.Get<PlayerNeon>() == player;
 	}
 }

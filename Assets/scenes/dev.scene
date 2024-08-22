@@ -236,28 +236,28 @@
       "Enabled": true,
       "Components": [
         {
-          "__type": "Entity",
-          "__guid": "cf374dc6-08e2-47d8-a2be-b8cd98002ff4",
-          "health": 0,
-          "isAlive": true,
-          "maxHealth": 100
-        },
-        {
-          "__type": "EnemyAi",
-          "__guid": "b0166651-833f-47b4-a42e-f7af2cadd89e",
-          "agent": {
+          "__type": "BotAi",
+          "__guid": "090b4747-b2f5-43f5-a2f2-daf60f1debd0",
+          "Agent": {
             "_type": "component",
             "component_id": "4eec2632-8196-40fb-8daf-296e6517cdff",
             "go": "e3a6c309-0a49-4905-b357-6091e0c24a0d",
             "component_type": "NavMeshAgent"
           },
-          "animationHelper": {
+          "AnimationHelper": {
             "_type": "component",
             "component_id": "273f8c95-b5d5-4927-8ebd-5fb6883f749c",
             "go": "e3a6c309-0a49-4905-b357-6091e0c24a0d",
             "component_type": "CitizenAnimationHelper"
           },
-          "stopDistance": 255
+          "AttackRange": 200,
+          "CurrentTeam": "Enemy",
+          "EntityName": "enemy_regular",
+          "Health": 0,
+          "Id": "00000000-0000-0000-0000-000000000000",
+          "isAlive": true,
+          "MaxHealth": 100,
+          "StopDistance": 300
         },
         {
           "__type": "Sandbox.SkinnedModelRenderer",
@@ -354,7 +354,8 @@
             {
               "__type": "SpotAi",
               "__guid": "220d9c41-3b5d-4c2f-9808-fe33486483dd",
-              "lastSeenLocation": "0,0,0"
+              "DetectionInterval": 0.5,
+              "DetectionRadius": 500
             }
           ]
         }
@@ -612,7 +613,7 @@
     {
       "__guid": "ff9c3881-ceb5-4b55-9046-cb597e8d4786",
       "Flags": 0,
-      "Name": "Cube",
+      "Name": "Capture Point A",
       "Position": "0,-276.8925,74.56207",
       "Enabled": true,
       "Components": [
@@ -631,6 +632,29 @@
           "CaptureTime": 10,
           "ControllingTeam": "Neutral",
           "PointName": "Capture Zone"
+        }
+      ]
+    },
+    {
+      "__guid": "f2d1c66d-773f-436b-8490-ad1d8cf4d369",
+      "Flags": 0,
+      "Name": "Logic",
+      "Position": "-827.2766,-254.7903,301.302",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "Ultraneon.GameService",
+          "__guid": "ba0f7a02-c3b4-410d-8822-23f69915f107",
+          "CaptureZones": [
+            {
+              "_type": "component",
+              "component_id": "80c2b359-9700-4704-9e85-a3f83cc8bfb2",
+              "go": "ff9c3881-ceb5-4b55-9046-cb597e8d4786",
+              "component_type": "CaptureZoneEntity"
+            }
+          ],
+          "RoundTime": 600,
+          "ScoreToWin": 1000
         }
       ]
     }

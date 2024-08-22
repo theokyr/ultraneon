@@ -1,54 +1,65 @@
 using Sandbox;
-using Sandbox.Citizen;
-using Sandbox.Diagnostics;
 using System;
-using System.Threading.Channels;
 
-[Category("Ultraneon")]
-[Icon( "settings_accessibility" )]
-public class Entity : Component, Component.IDamageable, Component.INetworkListener
+namespace Ultraneon
 {
-	[Property, ReadOnly] private float maxHealth { get; set; } = 100f;
-	[Property,ReadOnly] public bool isAlive { get;private set; } = true;
-	[Property,HostSync, Change( nameof( OnDamage ) )] public float health { get; set; }
-
-	public void OnDamage( in DamageInfo damage )
+	public class Entity : Component, Component.IDamageable
 	{
-		if ( !isAlive ) return;
+		[Property]
+		public Guid Id { get; private set; }
 
+		[Property]
+		public string EntityName { get; set; }
 
+		public bool IsActive { get; private set; } = true;
 
-		health = Math.Clamp(health - damage.Damage, 0f, maxHealth);
-
-		if ( health <= 0 ) killEntity();
-		Log.Info( damage.Attacker );
-
-	}
-
-	protected override void OnEnabled()
-	{
-		health = maxHealth;
-	}
-	[Button( "kill player" )]
-	public void killEntity()
-	{
-		health = 0f;
-		isAlive = false;
-		becomeRagdoll();
-	}
-
-	void becomeRagdoll()
-	{
-		var collider = GameObject.Components.Get<BoxCollider>();
-		collider.Enabled = false;
-		var ragdoll = GameObject.Components.Get<ModelPhysics>(true);
-		ragdoll.Enabled = true;
-
-		if ( GameObject.Tags.Has( "bot" ) )
+		protected override void OnAwake()
 		{
-			GameObject.Components.Get<NavMeshAgent>().Enabled = false;
-			GameObject.Tags.Add( "debris" );
+			base.OnAwake();
+			Id = Guid.NewGuid();
+		}
+
+		protected override void OnStart()
+		{
+			base.OnStart();
+			if ( string.IsNullOrEmpty( EntityName ) )
+			{
+				EntityName = GetType().Name;
+			}
+		}
+
+		public virtual void Activate()
+		{
+			IsActive = true;
+		}
+
+		public virtual void Deactivate()
+		{
+			IsActive = false;
+		}
+
+		public virtual void OnCollision( Entity other )
+		{
+		}
+
+		public void OnDamage( in DamageInfo damageInfo )
+		{
+			throw new NotImplementedException();
+		}
+
+		public virtual void Destroy()
+		{
+			GameObject.Destroy();
+		}
+
+		public float DistanceTo( Entity other )
+		{
+			return Vector3.DistanceBetween( Transform.Position, other.Transform.Position );
+		}
+
+		public Vector3 DirectionTo( Entity other )
+		{
+			return (other.Transform.Position - Transform.Position).Normal;
 		}
 	}
-
 }

@@ -1,22 +1,14 @@
 ﻿using Sandbox;
 using System;
 using System.Threading.Tasks;
+using Sandbox.Events;
 
 namespace Ultraneon
 {
-	public class PlayerNeon : Entity
+	public class PlayerNeon : BaseNeonCharacterEntity
 	{
-		[Property]
-		public float MaxHealth { get; set; } = 100f;
-
-		[Property, HostSync, Change( nameof(OnDamage) )]
-		public float Health { get; set; }
-
 		[Sync]
 		public Team CurrentTeam { get; set; } = Team.Player;
-
-		[Sync]
-		public int Score { get; private set; } = 0;
 
 		[Property]
 		public float CaptureTime { get; set; } = 15f;
@@ -59,8 +51,19 @@ namespace Ultraneon
 			UpdateCapture();
 		}
 
+		public new void OnDamage( DamageInfo info )
+		{
+			if ( IsProxy || IsDead ) return;
+
+			if ( info.Attacker.Components.Get<Entity>() is { } entity )
+			{
+				GameObject.Dispatch( new DamageEvent( this, entity, info.Damage, info.Position ) );
+			}
+		}
+
 		private void HandleInput()
 		{
+			// TODO: Implement input handling
 		}
 
 		private void TryHeal()
@@ -103,7 +106,6 @@ namespace Ultraneon
 		private void CompleteCaptureZone()
 		{
 			// TODO: Implement zone capture logic
-			AddScore( 100 ); // Score for capturing a grey zone
 		}
 
 		public void TakeDamage( DamageInfo info )
@@ -115,8 +117,7 @@ namespace Ultraneon
 
 			if ( Health <= 0 )
 			{
-				// TODO: Kill me
-				// Die( info.Attacker.Components.FirstOrDefault<Entity>( x => x ) );
+				Die( info.Attacker.Components.Get<PlayerNeon>() );
 			}
 		}
 
@@ -124,10 +125,10 @@ namespace Ultraneon
 		{
 			float damage = info.Damage;
 
-			// TODO: Handle wallbangs here with DamageFlags
-			// if ( info.Flags.HasFlag( DamageFlags.Wallbang ) )
+			// TODO: Wallbang hit reduction
+			// if (info.Flags.HasFlag(DamageFlags.Wallbang))
 			// {
-			// 	damage *= 0.5f; // 50% damage reduction for wallbangs
+			//     damage *= 0.5f;
 			// }
 
 			return damage;
@@ -135,6 +136,9 @@ namespace Ultraneon
 
 		private void Die( PlayerNeon killer )
 		{
+			bool isStylishKill = IsStylishKill( killer );
+			GameObject.Dispatch( new CharacterDeathEvent( this, killer, isStylishKill ) );
+
 			if ( HasCapturedZone() )
 			{
 				TimeSinceDeath = 0;
@@ -143,17 +147,6 @@ namespace Ultraneon
 			else
 			{
 				HandlePermanentDeath();
-			}
-
-			if ( killer != null )
-			{
-				int scoreAward = 10; // Base score for a kill
-				if ( killer.IsStylishKill( this ) )
-				{
-					scoreAward = 40; // Score for a stylish kill
-				}
-
-				killer.AddScore( scoreAward );
 			}
 		}
 
@@ -173,26 +166,22 @@ namespace Ultraneon
 			// TODO: Implement permanent death logic and show game over UI
 		}
 
-		private bool IsStylishKill( PlayerNeon victim )
+		private bool IsStylishKill( PlayerNeon killer )
 		{
 			// TODO: Implement logic for determining if it's a stylish kill (airborne, wallbang)
 			return false;
 		}
 
-		private Vector3 GetRespawnPosition()
+		public void Respawn( Vector3 position )
 		{
-			// TODO: Implement logic to get the position of a captured zone or a default spawn point
-			return Vector3.Zero;
+			Health = MaxHealth;
+			Transform.Position = position;
+			EnablePlayerControls();
 		}
 
 		private void EnablePlayerControls()
 		{
 			// TODO: Re-enable player controls after respawn
-		}
-
-		public void AddScore( int amount )
-		{
-			Score = Math.Max( 0, Score + amount );
 		}
 	}
 }

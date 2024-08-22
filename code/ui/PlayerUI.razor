@@ -16,7 +16,7 @@
 @code
 {
 	[Property]
-	Entity player { get; set; }
+	PlayerNeon player { get; set; }
 
 	[Property]
 	PlayerInventory inventory { get; set; }
@@ -24,13 +24,13 @@
 	protected override void OnEnabled()
 	{
 		base.OnEnabled();
-		player = Scene.GetAllComponents<Entity>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
+		player = Scene.GetAllComponents<PlayerNeon>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
 		inventory = player?.GameObject.Components.Get<PlayerInventory>();
 		Log.Info( $"PlayerUI OnEnabled: player = {player}, inventory = {inventory}" );
 	}
 
 	protected override int BuildHash()
 	{
-		return player.IsValid() ? System.HashCode.Combine( player.health, inventory?.SelectedSlot ) : 0;
+		return player.IsValid() ? System.HashCode.Combine( ((BaseNeonCharacterEntity)player).Health, inventory?.SelectedSlot ) : 0;
 	}
 }

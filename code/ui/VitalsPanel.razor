@@ -7,14 +7,14 @@
 <root>
 	<div class="vitals">
 		<div class="icon">add_box</div>
-		<div>@( Player?.health )</div>
+		<div>@(((BaseNeonCharacterEntity)Player)?.Health)</div>
 	</div>
 </root>
 
 @code
 {
 	[Property]
-	public Entity Player { get; set; }
+	public PlayerNeon Player { get; set; }
 
 	protected override void OnAfterTreeRender( bool firstTime )
 	{
@@ -22,12 +22,12 @@
 
 		if ( firstTime )
 		{
-			Player = Scene.GetAllComponents<Entity>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
+			Player = Scene.GetAllComponents<PlayerNeon>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
 		}
 	}
 
 	protected override int BuildHash()
 	{
-		return System.HashCode.Combine( Player?.health );
+		return System.HashCode.Combine( ((BaseNeonCharacterEntity)Player)?.Health );
 	}
 }
