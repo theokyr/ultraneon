@@ -4,6 +4,7 @@ using Sandbox.Diagnostics;
 using System;
 using Sandbox.Events;
 using Ultraneon;
+using Ultraneon.Events;
 
 [Category( "Ultraneon" )]
 [Icon( "settings_accessibility" )]

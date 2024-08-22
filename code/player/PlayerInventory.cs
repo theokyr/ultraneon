@@ -1,6 +1,8 @@
 using Sandbox;
 using System;
 using System.Linq;
+using Sandbox.Events;
+using Ultraneon.Events;
 
 namespace Ultraneon
 {
@@ -15,7 +17,7 @@ namespace Ultraneon
 		public WeaponBaseNeon[] Weapons { get; private set; } = new WeaponBaseNeon[MaxWeapons];
 
 		[Property, Sync]
-		public int SelectedSlot { get; private set; } = 0;
+		public int SelectedSlot { get; private set; } = 5;
 
 		private const int MaxWeapons = 4;
 
@@ -77,14 +79,26 @@ namespace Ultraneon
 		{
 			if ( weapon == ActiveWeapon ) return;
 
-			ActiveWeapon?.Holster();
+			Log.Info( $"Switching weapon from {ActiveWeapon?.GameObject.Name ?? "None"} to {weapon?.GameObject.Name ?? "None"}" );
+
+			var oldWeapon = ActiveWeapon;
+			oldWeapon?.Holster();
 			ActiveWeapon = weapon;
 
-			if ( ActiveWeapon != null )
+			GameObject.Dispatch( new ActiveWeaponChangedEvent( oldWeapon, ActiveWeapon ) );
+
+			if ( ActiveWeapon == null )
 			{
-				SelectedSlot = Array.IndexOf( Weapons, ActiveWeapon );
-				ActiveWeapon.Equip();
+				SelectedSlot = -1;
+				Log.Info( "No active weapon. SelectedSlot set to -1" );
+				return;
 			}
+
+			SelectedSlot = Array.IndexOf( Weapons, ActiveWeapon );
+			ActiveWeapon.Equip();
+
+			Log.Info(
+				$"New active weapon: {ActiveWeapon.GameObject.Name}, SelectedSlot: {SelectedSlot}, Ammo: {ActiveWeapon.CurrentAmmo}/{ActiveWeapon.ClipSize}" );
 		}
 
 		public bool AddWeapon( WeaponBaseNeon weapon )

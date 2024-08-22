@@ -9,7 +9,7 @@
 		@foreach ( var point in CapturePoints )
 		{
 			<div class="radar-blip @point.ControllingTeam" style="left: @( point.RadarX )%; top: @( point.RadarY )%;">
-				<div>@(point.ControllingTeam)</div>
+				<div>@( point.ControllingTeam )</div>
 				<div class="capture-progress-indicator" style="width: @( point.CaptureProgress / 100 )%"></div>
 			</div>
 		}

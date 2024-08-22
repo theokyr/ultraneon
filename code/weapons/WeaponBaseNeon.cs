@@ -1,3 +1,6 @@
+using Sandbox.Events;
+using Ultraneon.Events;
+
 namespace Ultraneon
 {
 	public enum WeaponType
@@ -62,6 +65,8 @@ namespace Ultraneon
 		public GameObject ImpactPrefab { get; set; }
 
 		public GameObject Owner { get; private set; }
+		
+		public int WeaponSlot { get; private set; }
 
 		private bool _hasShot;
 		private bool _isReloading;
@@ -117,7 +122,10 @@ namespace Ultraneon
 			Sound.Play( ShootSound );
 			_hasShot = true;
 			CurrentAmmo--;
+			Log.Info($"Weapon {GameObject.Name} fired. Current Ammo: {CurrentAmmo}/{ClipSize}");
 
+			GameObject.Dispatch(new WeaponStateChangedEvent(this));
+			
 			Viewmodel?.Set( "b_attack", true );
 
 			var camera = Scene.GetAllComponents<CameraComponent>().FirstOrDefault( x => x.IsMainCamera );
@@ -189,9 +197,11 @@ namespace Ultraneon
 		{
 			if ( _isReloading || CurrentAmmo == ClipSize ) return;
 			_isReloading = true;
+			
 			// TODO: Play reload animation
 			// TODO: Play reload sound
 			// TODO: Schedule CompleteReload() after ReloadTime seconds
+			
 			CompleteReload();
 		}
 
@@ -199,6 +209,8 @@ namespace Ultraneon
 		{
 			CurrentAmmo = ClipSize;
 			_isReloading = false;
+			Log.Info($"Weapon {GameObject.Name} reloaded. Current Ammo: {CurrentAmmo}/{ClipSize}");
+			GameObject.Dispatch(new WeaponStateChangedEvent(this));
 		}
 
 		public void SetVisible( bool visible )

@@ -9,7 +9,7 @@
 		@for ( int i = 0; i < MAX_INVENTORY_SLOTS; i++ )
 		{
 			int slotIndex = i;
-			<div class="items @( Inventory?.SelectedSlot == slotIndex ? "selected" : "" )">
+			<div class="item @( Inventory?.ActiveWeapon != null && Inventory?.SelectedSlot == slotIndex ? "selected" : "" )">
 				<div class="item-number">@( slotIndex + 1 )</div>
 				@if ( Inventory?.Weapons != null && Inventory.Weapons.Length > slotIndex && Inventory.Weapons[slotIndex] != null )
 				{

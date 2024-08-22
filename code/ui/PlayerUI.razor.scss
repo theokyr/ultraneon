@@ -1,35 +1,13 @@
-
 PlayerUI {
   position: absolute;
   bottom: 0px;
   left: 0px;
   right: 0px;
   top: 0px;
+  display: flex;
   pointer-events: none;
 
   .icon {
     font-family: Material Icons;
-  }
-
-  .ammo-display {
-    position: absolute;
-    right: 100px;
-    bottom: 200px;
-    gap: 10px;
-    background-color: #0004;
-    opacity: 0.7;
-    border-radius: 3px;
-    padding: 10px 20px;
-    color: #3498db;
-    font-weight: 400;
-    font-size: 50px;
-    font-family: Cascadia Code;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(2px);
-
-    .icon {
-      font-family: Material Icons;
-    }
   }
 }

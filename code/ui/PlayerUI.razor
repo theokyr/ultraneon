@@ -1,14 +1,17 @@
-@using System
 @using Sandbox
 @using Sandbox.UI
+@using Ultraneon.Events
 @inherits PanelComponent
 @attribute [StyleSheet]
 @namespace Ultraneon.UI
 
 <root>
-	<VitalsPanel Player="@player"/>
-	<InventoryPanel Inventory="@inventory"/>
-	<AmmoPanel Inventory="@inventory"/>
+	<VitalsPanel Player="@Player"/>
+	<InventoryPanel Inventory="@Inventory"/>
+	@if ( Inventory?.ActiveWeapon != null )
+	{
+		<AmmoPanel Weapon="@Inventory.ActiveWeapon"/>
+	}
 	<CrosshairPanel/>
 	<RadarPanel/>
 </root>
@@ -16,21 +19,38 @@
 @code
 {
 	[Property]
-	PlayerNeon player { get; set; }
+	PlayerNeon Player { get; set; }
 
 	[Property]
-	PlayerInventory inventory { get; set; }
+	PlayerInventory Inventory { get; set; }
+
+	private AmmoPanel ammoPanel;
 
 	protected override void OnEnabled()
 	{
 		base.OnEnabled();
-		player = Scene.GetAllComponents<PlayerNeon>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
-		inventory = player?.GameObject.Components.Get<PlayerInventory>();
-		Log.Info( $"PlayerUI OnEnabled: player = {player}, inventory = {inventory}" );
+		Player = Scene.GetAllComponents<PlayerNeon>().FirstOrDefault( x => x.GameObject.Tags.Has( "player" ) );
+		Inventory = Player?.GameObject.Components.Get<PlayerInventory>();
+		Log.Info( $"PlayerUI OnEnabled: player = {Player?.GameObject.Name ?? "None"}, inventory = {(Inventory != null ? "Valid" : "None")}" );
 	}
 
 	protected override int BuildHash()
 	{
-		return player.IsValid() ? System.HashCode.Combine( ((BaseNeonCharacterEntity)player).Health, inventory?.SelectedSlot ) : 0;
+		if ( !Player.IsValid() ) return 0;
+
+		var hash = System.HashCode.Combine(
+			((BaseNeonCharacterEntity)Player).Health,
+			Inventory?.SelectedSlot,
+			Inventory?.ActiveWeapon?.WeaponType,
+			Inventory?.ActiveWeapon?.CurrentAmmo,
+			Inventory?.ActiveWeapon?.ClipSize
+		);
+
+		Log.Info( $"PlayerUI BuildHash: Health={((BaseNeonCharacterEntity)Player).Health}, " +
+		          $"SelectedSlot={Inventory?.SelectedSlot}, " +
+		          $"ActiveWeapon={Inventory?.ActiveWeapon?.GameObject.Name ?? "None"}, " +
+		          $"Ammo={Inventory?.ActiveWeapon?.CurrentAmmo ?? -1}/{Inventory?.ActiveWeapon?.ClipSize ?? -1}" );
+
+		return hash;
 	}
 }

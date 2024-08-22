@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sandbox.Events;
+using Ultraneon.Events;
 
 namespace Ultraneon;
 
@@ -150,12 +151,3 @@ public class GameService : Component,
 		}
 	}
 }
-
-public record CaptureZoneEvent( string ZoneName, Team PreviousTeam, Team NewTeam ) : IGameEvent;
-
-public record PlayerSpawnEvent( Team Team ) : IGameEvent;
-
-public record DamageEvent( BaseNeonCharacterEntity Target, Entity Attacker, float Damage, Vector3 Position )
-	: IGameEvent;
-
-public record CharacterDeathEvent( BaseNeonCharacterEntity Victim, Entity Killer, bool IsStylish ) : IGameEvent;

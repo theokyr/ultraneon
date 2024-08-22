@@ -14,21 +14,37 @@
 @code
 {
 	[Property]
-	public PlayerInventory Inventory { get; set; }
+	public WeaponBaseNeon Weapon { get; set; }
 
 	public int CurrentAmmo { get; set; }
 	public int MaxAmmo { get; set; }
 
 	public override void Tick()
 	{
-		if ( Inventory?.ActiveWeapon == null )
+		if ( Weapon == null )
 		{
 			CurrentAmmo = -1;
 			MaxAmmo = -1;
+			Log.Info( "AmmoPanel Tick: No weapon" );
 			return;
 		}
 
-		CurrentAmmo = Inventory.ActiveWeapon.CurrentAmmo;
-		MaxAmmo = Inventory.ActiveWeapon.ClipSize;
+		CurrentAmmo = Weapon.CurrentAmmo;
+		MaxAmmo = Weapon.ClipSize;
+		Log.Info( $"AmmoPanel Tick: {CurrentAmmo} / ${MaxAmmo}" );
+		StateHasChanged(); // FIXME: We shouldn't need to call this manually
+	}
+
+	protected override int BuildHash()
+	{
+		if ( !Weapon.IsValid() ) return 0;
+
+		var hash = System.HashCode.Combine(
+			Weapon.CurrentAmmo,
+			Weapon.ClipSize,
+			Weapon.WeaponType
+		);
+
+		return hash;
 	}
 }

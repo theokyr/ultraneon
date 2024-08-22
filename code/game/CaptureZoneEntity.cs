@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sandbox.Events;
 using Ultraneon;
+using Ultraneon.Events;
 
 [Category( "Ultraneon" )]
 [Icon( "place" )]
