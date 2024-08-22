@@ -244,8 +244,15 @@ namespace Ultraneon
 			Transform.Position = inventory.GameObject.Transform.Position;
 			Transform.Rotation = inventory.GameObject.Transform.Rotation;
 
-			Worldmodel.Enabled = false;
-			Viewmodel.Enabled = true;
+			if ( Worldmodel is not null )
+			{
+				Worldmodel.Enabled = false;
+			}
+
+			if ( Viewmodel is not null )
+			{
+				Viewmodel.Enabled = true;
+			}
 
 			SetupViewmodelArms( inventory );
 

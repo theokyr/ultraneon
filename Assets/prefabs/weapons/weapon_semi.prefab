@@ -23,10 +23,22 @@
         "ReloadTime": 2,
         "ShootSound": "sounds/placeholders/pistol_shoot.sound",
         "SinceEquipped": {
-          "Relative": 13751.998
+          "Relative": 486.8176
         },
         "SinceShot": {
-          "Relative": 13751.998
+          "Relative": 486.8176
+        },
+        "Viewmodel": {
+          "_type": "component",
+          "component_id": "b7225ee5-e002-46da-a6da-58b1a5fb2e9f",
+          "go": "d9b51831-8aa4-4903-aacf-49555d47eda1",
+          "component_type": "SkinnedModelRenderer"
+        },
+        "ViewmodelArms": {
+          "_type": "component",
+          "component_id": "b7225ee5-e002-46da-a6da-58b1a5fb2e9f",
+          "go": "d9b51831-8aa4-4903-aacf-49555d47eda1",
+          "component_type": "SkinnedModelRenderer"
         },
         "WeaponDamage": 50,
         "WeaponType": "Semi"

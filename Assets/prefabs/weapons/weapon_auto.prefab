@@ -23,10 +23,22 @@
         "ReloadTime": 3,
         "ShootSound": "sounds/placeholders/pistol_shoot.sound",
         "SinceEquipped": {
-          "Relative": 15376.742
+          "Relative": 348.20987
         },
         "SinceShot": {
-          "Relative": 15376.742
+          "Relative": 348.20987
+        },
+        "Viewmodel": {
+          "_type": "component",
+          "component_id": "412b4798-3f36-4a70-9be7-4fec02bee19a",
+          "go": "4e00321c-fac1-4e38-a817-9a0f24af6c68",
+          "component_type": "SkinnedModelRenderer"
+        },
+        "ViewmodelArms": {
+          "_type": "component",
+          "component_id": "412b4798-3f36-4a70-9be7-4fec02bee19a",
+          "go": "4e00321c-fac1-4e38-a817-9a0f24af6c68",
+          "component_type": "SkinnedModelRenderer"
         },
         "WeaponDamage": 20,
         "WeaponType": "Auto"
